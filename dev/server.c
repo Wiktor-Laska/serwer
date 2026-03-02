@@ -4,74 +4,97 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <poll.h> 
 
-// Funkcja obsługująca pojedynczego klienta
-void *connection_handler(void *socket_desc) {
-    // Odczytujemy numer gniazda i OD RAZU zwalniamy zaalokowaną pamięć
-    int sock = *(int*)socket_desc;
-    int id=htonl(sock);
-    free(socket_desc); 
-    
-    char buffer[256];
-    int read_size;
-    send(sock, (void*)&id, sizeof(id), 0);
-    // Nieskończona pętla - odbieramy dane aż do przerwania
-    while(1) {
-        // Czyścimy bufor PRZED każdym nowym odczytem
-        memset(buffer, 0, 256);
-        
-        // Blokujemy działanie wątku i czekamy na wiadomość od klienta
-        read_size = recv(sock, buffer, 255, 0);
-        
-        // Sprawdzamy, czy odczyt się powiódł
-        if(read_size <= 0) {
-            printf("Serwer: Klient %d się rozłączył bez pożegnania lub wystąpił błąd.\n", sock);
-            break; // Wychodzimy z pętli
-        }
-        
-        // Sprawdzamy, czy klient przysłał komendę wyjścia "-1\n"
-        if(strcmp(buffer, "-1\n") == 0) {
-            printf("Serwer: Klient zakończył nadawanie (-1).\n");
-            break; // Wychodzimy z pętli
-        }
-        
-        // Jeśli to żadna z powyższych sytuacji, po prostu wypisujemy liczbę
-        printf("Serwer: Otrzymałem od klienta %d liczbę: %s", sock,buffer);
-    }
-    
-    // Kod po wyjściu z pętli while(1)
-    printf("Serwer: CLOSE. Zamykam gniazdo dla tego klienta %d.\n", sock);
-    
-    close(sock);
-    pthread_exit(NULL);
-}
-int main() {
+#define MAX_PLAYERS 4
+// struktura całego servera
+typedef struct {
     int listenfd, connfd;
     struct sockaddr_in serv_addr; 
-    pthread_t thread_id;
-
-    listenfd = socket(AF_INET, SOCK_STREAM, 0);
-    memset(&serv_addr, '0', sizeof(serv_addr));
-
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(5000); 
-
-    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)); 
-    listen(listenfd, 10); 
+    struct pollfd fds[MAX_PLAYERS + 1];
     
-    printf("Serwer uruchomiony. Czekam na liczby na porcie 5000...\n");
 
-    while(1) {
-        connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
+    int points[MAX_PLAYERS]; 
+    int ready[MAX_PLAYERS];
+    int num_players;
+} Server;
+// inicjalizacja serwera
+void init(Server* ms) {
+    memset(ms, 0, sizeof(Server));
+    
+    ms->listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    ms->serv_addr.sin_family = AF_INET;
+    ms->serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    ms->serv_addr.sin_port = htons(5000); 
+    
+    bind(ms->listenfd, (struct sockaddr*)&ms->serv_addr, sizeof(ms->serv_addr)); 
+    listen(ms->listenfd, 10); 
+
+    ms->fds[0].fd = ms->listenfd;
+    ms->fds[0].events = POLLIN;
+}
+// działanie lobby
+void lobby(Server* serv) {
+    for(;;) {
+        poll(serv->fds, serv->num_players + 1, -1);
         
-        // POPRAWKA: Tworzymy nową pamięć dla każdego połączenia (eliminuje race condition)
-        int *new_sock = malloc(sizeof(int));
-        *new_sock = connfd;
-        
-        pthread_create(&thread_id, NULL, connection_handler, (void*) new_sock);
-        // Odłączamy wątek, żeby system sam posprzątał po nim zasoby
-        pthread_detach(thread_id); 
+        // przyjmowanie zgłoszeni(fds[0] nasza poczekalnia dla nowych graczy którzy są później przypisywani od 1 do maks 4)
+        if((serv->fds[0].revents & POLLIN) && serv->num_players < MAX_PLAYERS) {
+            int new_sock = accept(serv->listenfd, NULL, NULL);
+            
+            serv->num_players++;
+            serv->fds[serv->num_players].fd = new_sock;
+            serv->fds[serv->num_players].events = POLLIN;
+            serv->points[serv->num_players - 1] = 0;
+            serv->ready[serv->num_players - 1] = 0;
+            
+            char msg[256];
+            sprintf(msg, "=== LOBBY ===\nDolaczyles jako Gracz %d.\nWpisz '1', gdy bedziesz gotowy do gry!\n", serv->num_players);
+            send(new_sock, msg, strlen(msg), 0);
+            
+            printf("Gracz %d dolaczyl do Lobby.\n", serv->num_players);
+        }
+
+        //sprawdzanie gotowości graczy
+        for(int i=1;i<=serv->num_players;i++){
+            if (serv->fds[i].revents & POLLIN) {
+                char buf[256] = {0};
+                int r = recv(serv->fds[i].fd, buf, 255, 0);
+                if (r > 0) {
+                    if (strncmp(buf, "1", 1) == 0 &&serv->ready[i - 1] == 0) {
+                        serv->ready[i - 1] = 1; 
+                        char msg[100];
+                        sprintf(msg, "-> Gracz %d kliknal READY!\n", i);
+                        printf("%s", msg);
+                        for (int j = 1; j <= serv->num_players; j++) send(serv->fds[j].fd, msg, strlen(msg), 0);
+                    }
+                }
+            }
+        }
+        //uruchomienie gry
+        if (serv->num_players>=2){
+            int all_ready=1;
+            for(int i=0;i<serv->num_players;i++){
+                if(!serv->ready[i])
+                    all_ready=0;
+            }
+            if(all_ready){
+                printf("Wszyscy gotowi\n");
+                break;
+            }
+        }
+
     }
+}
+void game(Server* serv){
+
+}
+int main() {
+    Server main_server;
+    
+    init(&main_server);
+    printf("Serwer uruchomiony. Czekam na graczy na porcie 5000...\n");
+    lobby(&main_server);
+    game(&main_server);
     return 0;
 }
