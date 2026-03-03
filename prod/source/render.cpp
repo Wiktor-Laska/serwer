@@ -28,14 +28,6 @@ GLfloat fi = 0;
 bool lobby = true;
 
 
-struct Character {
-  unsigned int TextureID;
-  glm::ivec2 Size;
-  glm::ivec2 Bearing;
-  unsigned int Advance;
-};
-
-std::map<char, Character> Characters;
 
 //-------------Atrybuty wierzcholkow------------------------------------------
 
@@ -69,7 +61,7 @@ std::map<char, Character> Characters;
 		0, 1, 2,		  //indeksy wierzcholkow dla pierwszego trojkata
 		1, 2, 3			  //indeksy wierzcholkow dla drugiego trojkata
 	};
-	
+
 
 //----------------------------kod shadera wierzcholkow-----------------------------------------
 
@@ -161,12 +153,7 @@ int initShaders(void)
 //--------------------------------------------funkcja inicjujaca-------------------------------------
 int initGL(void)
 {
-
-    FT_Library ft;
-    FT_Init_FreeType(&ft)
-
-    FT_Set_Pixel_Sizes(face, 0, 48);
-   
+  
     if(initShaders())
     {   
 
