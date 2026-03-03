@@ -26,4 +26,8 @@ sudo apt install libxxf86vm-dev
 
 kompilacja gry:
 
-g++ Linux_OpenGL.cpp -o program -lGL -lGLU -lX11 -lXxf86vm
+g++ Linux_OpenGL.cpp render.cpp letters.cpp -o game -lGL -lGLU -lX11 -lXxf86vm
+
+odpalanie:
+
+./game

@@ -11,6 +11,8 @@
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 
+#include "letters.h"
+
 
 
 GLuint vbo[4];		//identyfikatory buforow wierzcholkow
@@ -199,6 +201,7 @@ int initGL(void)
 	viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)); 
 	//macierz rzutowania perspektywicznego
 	projectionMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 1.0f, 10.0f);		
+  initLetters(shaderProgram);
 
  	return 1;
     }
@@ -225,14 +228,16 @@ int drawGLScene(int counter)
     /*
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, 3); //rysowanie trojkata
-
+    
     glBindVertexArray(vao[1]);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
     */
     //fi += 0.5;
 
+    drawText("AAA", glm::vec3(-1.0f, 0.0f, 1.0f), shaderProgram, projectionMatrix, viewMatrix);
+
     if (lobby){
-      
+  
     } else {
       //gra
     }
@@ -253,6 +258,7 @@ void deleteAll()
     glDeleteBuffers(4, vbo);
     glDeleteBuffers(1, &ebo);
     glDeleteVertexArrays(2, vao);
+    deleteLeters();
 }
 
 
