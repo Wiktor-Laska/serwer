@@ -207,6 +207,57 @@ GLfloat pos_G[] = { //define G pos matrix
 GLfloat col_G[60*3]; //define G col matrix
 
 
+//define I vao, vbo
+GLuint vao_I;
+GLuint vbo_pos_I;
+GLuint vbo_col_I;
+
+GLfloat pos_I[] = { //define I pos matrix
+    //kreska
+    -0.075f,-0.5f,  0.0f,     0.075f, -0.5f,  0.0f,      0.075f, 0.5f,  0.0f,
+    -0.075f,-0.5f,  0.0f,    -0.075f,  0.5f,  0.0f,      0.075f, 0.5f,  0.0f
+};
+
+GLfloat col_I[6*3]; //define G col matrix
+
+
+//define K vao, vbo
+GLuint vao_K;
+GLuint vbo_pos_K;
+GLuint vbo_col_K;
+
+GLfloat pos_K[] = { //define K pos matrix
+    //kreska
+    -0.25f, -0.5f,  0.0f,     -0.1f,  -0.5f,  0.0f,     -0.1f,   0.5f,  0.0f,
+    -0.25f, -0.5f,  0.0f,     -0.25f,  0.5f,  0.0f,     -0.1f,   0.5f,  0.0f,
+
+     0.25f,  0.5f,  0.0f,      0.1f,   0.5f,  0.0f,     -0.1f,  -0.1f,  0.0f,
+     0.1f,   0.5f,  0.0f,     -0.1f,  -0.1f,  0.0f,     -0.1f,   0.05f, 0.0f,
+
+     0.25f, -0.5f,  0.0f,      0.1f,  -0.5f,  0.0f,     -0.1f,   0.1f,  0.0f,
+     0.1f,  -0.5f,  0.0f,     -0.1f,   0.1f,  0.0f,     -0.1f,  -0.05f, 0.0f
+};
+
+GLfloat col_K[18*3]; //define K col matrix
+
+//define L vao, vbo
+GLuint vao_L;
+GLuint vbo_pos_L;
+GLuint vbo_col_L;
+
+GLfloat pos_L[] = { //define L pos matrix
+    //kreska
+    -0.25f, -0.5f,  0.0f,     -0.1f,  -0.5f,  0.0f,     -0.1f,   0.5f,  0.0f,
+    -0.25f, -0.5f,  0.0f,     -0.25f,  0.5f,  0.0f,     -0.1f,   0.5f,  0.0f,
+
+    //przod
+     0.25f, -0.5f,  0.0f,     -0.1f,  -0.5f,  0.0f,      0.25f, -0.35f, 0.0f,
+    -0.1f,  -0.5f,  0.0f,      0.25f, -0.35f, 0.0f,     -0.1f,  -0.35f, 0.0f
+
+};
+
+GLfloat col_L[24*3]; //define L col matrix
+
 void init_A(GLuint shaderProgram) {
     glGenVertexArrays(1, &vao_A);
     glBindVertexArray(vao_A);
@@ -387,6 +438,96 @@ void init_G(GLuint shaderProgram) {
     glBindVertexArray(0);
 }
 
+void init_I(GLuint shaderProgram) {
+    glGenVertexArrays(1, &vao_I);
+    glBindVertexArray(vao_I);
+
+    for (int i = 0; i < 6 * 3; i += 3) {
+        col_I[i]    = 1.0f; //red
+        col_I[i+1]  = 0.0f; //green
+        col_I[i+2]  = 0.0f; //blue
+    }
+
+    glGenBuffers(1, &vbo_pos_I);
+    glGenBuffers(1, &vbo_col_I);
+    GLint posAttrib, colAttrib;
+
+    posAttrib = glGetAttribLocation(shaderProgram, "position"); 
+	colAttrib = glGetAttribLocation(shaderProgram, "color"); 
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_I); 							
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pos_I), pos_I, GL_STATIC_DRAW); 	
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);				
+	glEnableVertexAttribArray(posAttrib);		
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_col_I);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(col_I), col_I, GL_STATIC_DRAW);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(colAttrib);
+
+    glBindVertexArray(0);
+}
+
+void init_K(GLuint shaderProgram) {
+    glGenVertexArrays(1, &vao_K);
+    glBindVertexArray(vao_K);
+
+    for (int i = 0; i < 18 * 3; i += 3) {
+        col_K[i]    = 1.0f; //red
+        col_K[i+1]  = 0.0f; //green
+        col_K[i+2]  = 0.0f; //blue
+    }
+
+    glGenBuffers(1, &vbo_pos_K);
+    glGenBuffers(1, &vbo_col_K);
+    GLint posAttrib, colAttrib;
+
+    posAttrib = glGetAttribLocation(shaderProgram, "position"); 
+	colAttrib = glGetAttribLocation(shaderProgram, "color"); 
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_K); 							
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pos_K), pos_K, GL_STATIC_DRAW); 	
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);				
+	glEnableVertexAttribArray(posAttrib);		
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_col_K);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(col_K), col_K, GL_STATIC_DRAW);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(colAttrib);
+
+    glBindVertexArray(0);
+}
+
+void init_L(GLuint shaderProgram) {
+    glGenVertexArrays(1, &vao_L);
+    glBindVertexArray(vao_L);
+
+    for (int i = 0; i < 12 * 3; i += 3) {
+        col_L[i]    = 1.0f; //red
+        col_L[i+1]  = 0.0f; //green
+        col_L[i+2]  = 0.0f; //blue
+    }
+
+    glGenBuffers(1, &vbo_pos_L);
+    glGenBuffers(1, &vbo_col_L);
+    GLint posAttrib, colAttrib;
+
+    posAttrib = glGetAttribLocation(shaderProgram, "position"); 
+	colAttrib = glGetAttribLocation(shaderProgram, "color"); 
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_L); 							
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pos_L), pos_L, GL_STATIC_DRAW); 	
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);				
+	glEnableVertexAttribArray(posAttrib);		
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_col_L);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(col_L), col_L, GL_STATIC_DRAW);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(colAttrib);
+
+    glBindVertexArray(0);
+}
+
 
 void initLetters(GLuint shaderProgram) {
     init_A(shaderProgram);
@@ -395,6 +536,9 @@ void initLetters(GLuint shaderProgram) {
     init_D(shaderProgram);
     init_E(shaderProgram);
     init_G(shaderProgram);
+    init_I(shaderProgram);
+    init_K(shaderProgram);
+    init_L(shaderProgram);
 }
 
 
@@ -429,6 +573,18 @@ void drawLetter(char letter, glm::vec3 position, GLuint shaderProgram, glm::mat4
     case 'G':
     glBindVertexArray(vao_G);
     glDrawArrays(GL_TRIANGLES, 0, 60);
+    break;
+    case 'I':
+    glBindVertexArray(vao_I);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    break;
+    case 'K':
+    glBindVertexArray(vao_K);
+    glDrawArrays(GL_TRIANGLES, 0, 18);
+    break;
+    case 'L':
+    glBindVertexArray(vao_L);
+    glDrawArrays(GL_TRIANGLES, 0, 12);
     break;
     }
 }
