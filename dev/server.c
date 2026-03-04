@@ -150,7 +150,8 @@ void game(Server *serv)
 
     sprintf(msg, "START\n");
     send_all(serv, msg, strlen(msg)); // każdy gracz dostake wiadomość START
-
+    char np = serv->num_players; // Zapisujemy liczbę jako 1 bajt
+    send_all(serv, &np, 1);
     for (char lvl = '1'; lvl <= '4'; lvl++)
     { // rundy
         for (int i = 0; i < 5; i++)
@@ -208,6 +209,8 @@ void game(Server *serv)
             // 1. gracz przysłał poprawną odpowiedź +1-4
             // 2. gracz przysłał błędną odpowiedź -2
             // 3. żaden gracz nie przysłał odpowiedzi -1 dla wszystkich
+            //sprintf(msg, "WYNIK\n");
+            //send_all(serv, msg, strlen(msg));
             if (poll_result == 0)
             {
                 // Czas minął, nikt nie odpowiedział
@@ -215,8 +218,8 @@ void game(Server *serv)
                 {
                     serv->points[x] -= 1;
                 }
-                sprintf(msg, "WYNIK\nnikt nie odpowiedział, wszyscy -1\n");
-                send_all(serv, msg, strlen(msg));
+                //sprintf(msg, "nikt nie odpowiedział, wszyscy -1\n");
+                //send_all(serv, msg, strlen(msg));
                 continue; // Przejdź do następnej rundy
             }
 
@@ -228,21 +231,19 @@ void game(Server *serv)
                     int r = recv(serv->fds[j].fd, odp_c, 255, 0);
                     if (r > 0)
                     {
-                        sprintf(msg, "WYNIK\n");
-                        send_all(serv, msg, strlen(msg));
                         if (odp_c[0] == odp)
                         {
                             serv->points[j - 1] += (lvl-'0');
 
-                            sprintf(msg, "Gracz %d odpowiedział dobrze +%d\n", j, lvl - '0');
-                            send_all(serv, msg, strlen(msg));
+                            //sprintf(msg, "Gracz %d odpowiedział dobrze +%d\n", j, lvl - '0');
+                            //send_all(serv, msg, strlen(msg));
                         }
                         else
                         {
                             serv->points[j - 1] -= 2;
 
-                            sprintf(msg, "Gracz %d odpowiedział źle -2\n", j);
-                            send_all(serv, msg, strlen(msg));
+                            //sprintf(msg, "Gracz %d odpowiedział źle -2\n", j);
+                            //send_all(serv, msg, strlen(msg));
                         }
 
                         break;
@@ -266,8 +267,6 @@ void end_game(Server *serv)
     send_all(serv, serv->points, serv->num_players);
     for(int i=1;i<=serv->num_players;i++){
         if(serv->fds[i].fd!=-1){
-            strcpy(msg, "Serwer zostal zamkniety. Do zobaczenia!\n");
-            send(serv->fds[i].fd, msg, strlen(msg), MSG_NOSIGNAL);
             close(serv->fds[i].fd);
             serv->fds[i].fd = -1;
         }
