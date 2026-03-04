@@ -191,7 +191,7 @@ int main(int argc, char **argv)
     done = False;
 
     GLWin.fs = False; // domyslne odpalenie trybu okienkowego
-    if (!createGLWindow(tytul, 640, 480, 24, GLWin.fs))
+    if (!createGLWindow(tytul, 1080, 720, 24, GLWin.fs))
         done = True;
   
 

@@ -1141,9 +1141,11 @@ void initLetters(GLuint shaderProgram) {
     init_Z(shaderProgram);
 }
 
-void drawLetter(char letter, glm::vec3 position, GLuint shaderProgram, glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
+void drawLetter(char letter, glm::vec3 position, float scale, GLuint shaderProgram, glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
     glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
-    glm::mat4 transformMatrix = projectionMatrix * viewMatrix * translationMatrix;
+    glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale, scale, scale));
+    glm::mat4 modelMatrix = translationMatrix * scaleMatrix;
+    glm::mat4 transformMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
     GLint transformMatrixUniformLocation = glGetUniformLocation(shaderProgram, "transformMatrix");
     glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
@@ -1228,13 +1230,13 @@ void drawLetter(char letter, glm::vec3 position, GLuint shaderProgram, glm::mat4
     }
 }
 
-void drawText(const char* text, glm::vec3 startPosition, GLuint shaderProgram, glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
+void drawText(const char* text, glm::vec3 startPosition, float scale, GLuint shaderProgram, glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
     float offset = 0.0f;
 
     for (int i = 0; text[i] != '\0'; i++) {
         glm::vec3 currentPos = glm::vec3(startPosition.x + offset, startPosition.y, startPosition.z);
-        drawLetter(text[i], currentPos, shaderProgram, projectionMatrix, viewMatrix);
-        offset += 0.6f;
+        drawLetter(text[i], currentPos, scale, shaderProgram, projectionMatrix, viewMatrix);
+        offset += (0.6f * scale);
     }
 }
 

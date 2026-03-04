@@ -27,7 +27,9 @@ GLint posAttrib, colAttrib;	//
 glm::mat4 viewMatrix = glm::mat4();
 glm::mat4 projectionMatrix = glm::mat4(); //marzerz widoku i rzutowania
 GLfloat fi = 0;
-bool lobby = true;
+bool lobby = false;
+bool game = false;
+bool results = false;
 
 
 
@@ -200,7 +202,7 @@ int initGL(void)
 	//macierz widoku (okresla polozenie kamery i kierunek w ktorym jest skierowana) 
 	viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)); 
 	//macierz rzutowania perspektywicznego
-	projectionMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 1.0f, 10.0f);		
+	projectionMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 1.0f, 20.0f);		
   initLetters(shaderProgram);
 
  	return 1;
@@ -228,18 +230,25 @@ int drawGLScene(int counter)
     /*
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, 3); //rysowanie trojkata
-    
-    glBindVertexArray(vao[1]);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
     */
+
+    
     //fi += 0.5;
 
-    drawText("ATZNT", glm::vec3(-1.0f, 0.0f, 1.0f), shaderProgram, projectionMatrix, viewMatrix);
+    
 
-    if (lobby){
+    if (results){      // result scene
   
-    } else {
-      //gra
+    } else if (lobby){ // lobby scene
+
+    } else if (game) { // game scene
+      
+    } else {           // main menu scene
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      drawText("STROOPVIVAL", glm::vec3(-1.2f, 1.5f, 0.0f), 0.4f, shaderProgram, projectionMatrix, viewMatrix);
+      drawText("IP", glm::vec3(-0.9f, 0.1f, 0.0f), 0.4f, shaderProgram, projectionMatrix, viewMatrix);
+      drawText("CONNECT", glm::vec3(-0.7f, -0.45f, 0.0f), 0.4f, shaderProgram, projectionMatrix, viewMatrix);
     }
  
     glFlush();
