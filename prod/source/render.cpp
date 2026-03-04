@@ -234,7 +234,7 @@ int drawGLScene(int counter)
     */
     //fi += 0.5;
 
-    drawText("AKIL", glm::vec3(-1.0f, 0.0f, 1.0f), shaderProgram, projectionMatrix, viewMatrix);
+    drawText("ATSR", glm::vec3(-1.0f, 0.0f, 1.0f), shaderProgram, projectionMatrix, viewMatrix);
 
     if (lobby){
   
