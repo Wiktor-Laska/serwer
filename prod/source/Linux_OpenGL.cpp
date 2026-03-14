@@ -269,17 +269,33 @@ int main(int argc, char **argv)
               {
                     int mouseX = event.xbutton.x;
                     int mouseY = event.xbutton.y;
-                    int btnX = 280;
-                    int btnY = 400;
-                    int btnWidth = 520;
-                    int btnHeight = 80;
+                    if(lobby == false && game == false){
+                    int btnWidth = (int)GLWin.width*(520.0/1080.0);
+                    int btnHeight = (int)GLWin.height*(80.0/720.0);
+                    int btnX = (GLWin.width-btnWidth)/2;
+                    int btnY = (int)GLWin.height*(400.0/720.0);
 
                     if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
                           mouseY >= btnY && mouseY <= btnY + btnHeight) {
                           
-                          printf("Button clicked at %d, %d!\n", mouseX, mouseY);
-                          // Do your button action here
+                          printf("connect button clicked,  add connect function %d", mouseX);
+                          //TODO and sceen chance and connect function
                       }
+                    } else if(lobby == true && game == false){
+                    int btnWidth = (int)GLWin.width*(520.0/1080.0);
+                    int btnHeight = (int)GLWin.height*(80.0/720.0);
+                    int btnX = (GLWin.width-btnWidth)/2;
+                    int btnY = (int)GLWin.height*(400.0/720.0);
+
+                    if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
+                          mouseY >= btnY && mouseY <= btnY + btnHeight) {
+                          
+                          printf("Ready button clicked %d", mouseX);
+                          //TODO add ready functionality and server comunication of readiness
+                      }
+                    }
+
+
                   break;
               }
               case KeyPress: // wcisniecie klawisza

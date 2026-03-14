@@ -30,7 +30,7 @@ GLint posAttrib, colAttrib;	//
 glm::mat4 viewMatrix = glm::mat4();
 glm::mat4 projectionMatrix = glm::mat4(); //marzerz widoku i rzutowania
 GLfloat fi = 0;
-bool lobby = false;
+bool lobby = true;
 bool game = false;
 bool results = false;
 std::string ip = "";

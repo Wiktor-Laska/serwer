@@ -4,3 +4,5 @@ int drawGLScene(int countervoid);
 void deleteAll();
 extern std::string ip;
 extern std::string ip_text;
+extern bool lobby;
+extern bool game;
