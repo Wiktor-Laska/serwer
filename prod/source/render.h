@@ -6,3 +6,4 @@ extern std::string ip;
 extern std::string ip_text;
 extern bool lobby;
 extern bool game;
+extern bool results;

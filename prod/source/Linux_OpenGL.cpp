@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <arpa/inet.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
 #include <GL/glx.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -45,6 +49,61 @@ int counter=0;
 //int iMx,iMy;
 Bool done;
 char tytul[] = "X Window + OpenGL";
+
+void setscene_results(){
+        results = true;
+        game = false;
+        lobby = false;
+}
+void setscene_game(){
+        results = false;
+        game = true;
+        lobby = false;
+}
+void setscene_lobby(){
+        results = false;
+        game = false;
+        lobby = true;
+}
+void setscene_mainmenu(){
+        results = false;
+        game = false;
+        lobby = false;
+}
+
+static void sendSceneChangeToServer(const char *msg)
+{
+    if (ip.empty()) {
+        printf("No server IP set, skipping scene change notify.\n");
+        return;
+    }
+
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        printf("Failed to create socket for scene change notify.\n");
+        return;
+    }
+
+    struct sockaddr_in serv_addr;
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(5000);
+
+    if (inet_pton(AF_INET, ip.c_str(), &serv_addr.sin_addr) <= 0) {
+        printf("Invalid server IP: %s\n", ip.c_str());
+        close(sock);
+        return;
+    }
+
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+        printf("Scene change connect failed.\n");
+        close(sock);
+        return;
+    }
+
+    send(sock, msg, strlen(msg), 0);
+    close(sock);
+}
 
 
 // funkcja do zwalniania uzywanych zasobow oraz przywracania starego pulpitu
@@ -225,7 +284,24 @@ void keyPressed(KeySym key)
         ip = ip + ".";
         ip_text = ip_text + ".";
         break;
-
+    case XK_BackSpace:
+        if (!ip.empty()) {
+            ip.pop_back();
+            ip_text.pop_back();
+        }
+        break;
+    case XK_u: 
+        setscene_results();
+        break;
+    case XK_i: 
+        setscene_game();
+        break;
+    case XK_o: 
+        setscene_lobby();
+        break;
+    case XK_p: 
+        setscene_mainmenu();
+        break;
     }
 }
 
@@ -269,30 +345,65 @@ int main(int argc, char **argv)
               {
                     int mouseX = event.xbutton.x;
                     int mouseY = event.xbutton.y;
-                    if(lobby == false && game == false){
-                    int btnWidth = (int)GLWin.width*(520.0/1080.0);
-                    int btnHeight = (int)GLWin.height*(80.0/720.0);
-                    int btnX = (GLWin.width-btnWidth)/2;
-                    int btnY = (int)GLWin.height*(400.0/720.0);
+                    printf("X: %d, Y: %d \n", mouseX, mouseY);
+                    if(results == true) {
 
-                    if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
-                          mouseY >= btnY && mouseY <= btnY + btnHeight) {
-                          
-                          printf("connect button clicked,  add connect function %d", mouseX);
-                          //TODO and sceen chance and connect function
-                      }
-                    } else if(lobby == true && game == false){
-                    int btnWidth = (int)GLWin.width*(520.0/1080.0);
-                    int btnHeight = (int)GLWin.height*(80.0/720.0);
-                    int btnX = (GLWin.width-btnWidth)/2;
-                    int btnY = (int)GLWin.height*(400.0/720.0);
+                        int btn1Width = (int)GLWin.width*(520.0/1080.0);
+                        int btn1Height = (int)GLWin.height*(80.0/720.0);
+                        int btn1X = (GLWin.width-btn1Width)/2;
+                        int btn1Y = (int)GLWin.height*(400.0/720.0);
 
-                    if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
-                          mouseY >= btnY && mouseY <= btnY + btnHeight) {
+                        int btn2Width = (int)GLWin.width*(520.0/1080.0);
+                        int btn2Height = (int)GLWin.height*(80.0/720.0);
+                        int btn2X = (GLWin.width-btn2Width)/2;
+                        int btn2Y = (int)GLWin.height*(535.0/720.0);
+
+                        if (mouseX >= btn1X && mouseX <= btn1X + btn1Width &&
+                            mouseY >= btn1Y && mouseY <= btn1Y + btn1Height) {
                           
-                          printf("Ready button clicked %d", mouseX);
-                          //TODO add ready functionality and server comunication of readiness
-                      }
+                            printf("Join again button clicked %d \n", mouseX);
+                            setscene_lobby();
+                        } else if(mouseX >= btn2X && mouseX <= btn2X + btn2Width &&
+                                  mouseY >= btn2Y && mouseY <= btn2Y + btn2Height){ 
+                            printf("Main menu button clicked %d \n", mouseX);
+                            setscene_mainmenu();
+                            //TODO add main menu functionality and server comunication change scene
+                        }
+
+                    } else if(game == true){
+
+
+                    } else if(lobby == true){
+
+
+                        int btnWidth = (int)GLWin.width*(520.0/1080.0);
+                        int btnHeight = (int)GLWin.height*(80.0/720.0);
+                        int btnX = (GLWin.width-btnWidth)/2;
+                        int btnY = (int)GLWin.height*(400.0/720.0);
+
+                        if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
+                            mouseY >= btnY && mouseY <= btnY + btnHeight) {
+                          
+                            printf("Ready button clicked %d \n", mouseX);
+                            //TODO add ready functionality and server comunication of readiness
+                        }
+
+
+                    } else {
+
+                        int btnWidth = (int)GLWin.width*(520.0/1080.0);
+                        int btnHeight = (int)GLWin.height*(80.0/720.0);
+                        int btnX = (GLWin.width-btnWidth)/2;
+                        int btnY = (int)GLWin.height*(400.0/720.0);
+
+                        if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
+                            mouseY >= btnY && mouseY <= btnY + btnHeight) {
+                          
+                            printf("connect button clicked,  add connect function %d \n", mouseX);
+                            setscene_lobby();
+                            //TODO and sceen change and connect function
+                        }
+
                     }
 
 

@@ -241,10 +241,20 @@ int drawGLScene(int counter)
     //fi += 0.5;
 
     //lobby = true;
-    
 
     if (results){      // result scene
-  
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, -0.8f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      drawText("RESULTS", glm::vec3(-1.2f, 1.5f, 0.0f), 0.4f, shaderProgram, projectionMatrix, viewMatrix);
+      drawText("WINNER: PLACEHOLDER", glm::vec3(-1.5f, 1.0f, 0.0f), 0.3f, shaderProgram, projectionMatrix, viewMatrix);
+      drawText("POINTS: PLACEHOLDER", glm::vec3(-1.5f, 0.5f, 0.0f), 0.3f, shaderProgram, projectionMatrix, viewMatrix);
+      drawText("JOIN AGAIN", glm::vec3(-0.8f, -0.45f, 0.0f), 0.3f, shaderProgram, projectionMatrix, viewMatrix);
+      drawText("MAIN MENU", glm::vec3(-0.8f, -1.25f, 0.0f), 0.3f, shaderProgram, projectionMatrix, viewMatrix);
     } else if (game){ // lobby scene
   
     } else if (lobby) { // game scene
