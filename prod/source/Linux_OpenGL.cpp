@@ -12,6 +12,9 @@
 #include <X11/keysym.h>
 #include "render.h"
 
+const int WINDOW_WIDTH = 1080;
+const int WINDOW_HEIGHT = 720;
+
 // struktura parametrow okna
 typedef struct {
     Display *dpy;
@@ -313,7 +316,7 @@ int main(int argc, char **argv)
     done = False;
 
     GLWin.fs = False; // domyslne odpalenie trybu okienkowego
-    if (!createGLWindow(tytul, 1080, 720, 24, GLWin.fs))
+    if (!createGLWindow(tytul, WINDOW_WIDTH, WINDOW_HEIGHT, 24, GLWin.fs))
         done = True;
   
 
@@ -348,15 +351,15 @@ int main(int argc, char **argv)
                     printf("X: %d, Y: %d \n", mouseX, mouseY);
                     if(results == true) {
 
-                        int btn1Width = (int)GLWin.width*(520.0/1080.0);
-                        int btn1Height = (int)GLWin.height*(80.0/720.0);
+                        int btn1Width = (int)GLWin.width*(520.0/WINDOW_WIDTH);
+                        int btn1Height = (int)GLWin.height*(80.0/WINDOW_HEIGHT);
                         int btn1X = (GLWin.width-btn1Width)/2;
-                        int btn1Y = (int)GLWin.height*(400.0/720.0);
+                        int btn1Y = (int)GLWin.height*(400.0/WINDOW_HEIGHT);
 
-                        int btn2Width = (int)GLWin.width*(520.0/1080.0);
-                        int btn2Height = (int)GLWin.height*(80.0/720.0);
+                        int btn2Width = (int)GLWin.width*(520.0/WINDOW_WIDTH);
+                        int btn2Height = (int)GLWin.height*(80.0/WINDOW_HEIGHT);
                         int btn2X = (GLWin.width-btn2Width)/2;
-                        int btn2Y = (int)GLWin.height*(535.0/720.0);
+                        int btn2Y = (int)GLWin.height*(535.0/WINDOW_HEIGHT);
 
                         if (mouseX >= btn1X && mouseX <= btn1X + btn1Width &&
                             mouseY >= btn1Y && mouseY <= btn1Y + btn1Height) {
@@ -371,15 +374,91 @@ int main(int argc, char **argv)
                         }
 
                     } else if(game == true){
+                        // --- Rząd 1 ---
+                        int btn1Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn1Height = (int)(GLWin.height * (86.0 / WINDOW_HEIGHT));
+                        int btn1X = (int)(GLWin.width * (120.0 / WINDOW_WIDTH));
+                        int btn1Y = (int)(GLWin.height * (204.0 / WINDOW_HEIGHT));
 
+                        int btn2Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn2Height = (int)(GLWin.height * (86.0 / WINDOW_HEIGHT));
+                        int btn2X = (int)(GLWin.width * (410.0 / WINDOW_WIDTH));
+                        int btn2Y = (int)(GLWin.height * (204.0 / WINDOW_HEIGHT));
+
+                        int btn3Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn3Height = (int)(GLWin.height * (86.0 / WINDOW_HEIGHT));
+                        int btn3X = (int)(GLWin.width * (695.0 / WINDOW_WIDTH));
+                        int btn3Y = (int)(GLWin.height * (204.0 / WINDOW_HEIGHT));
+
+                        // --- Rząd 2 ---
+                        int btn4Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn4Height = (int)(GLWin.height * (85.0 / WINDOW_HEIGHT));
+                        int btn4X = (int)(GLWin.width * (120.0 / WINDOW_WIDTH));
+                        int btn4Y = (int)(GLWin.height * (310.0 / WINDOW_HEIGHT));
+
+                        int btn5Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn5Height = (int)(GLWin.height * (85.0 / WINDOW_HEIGHT));
+                        int btn5X = (int)(GLWin.width * (410.0 / WINDOW_WIDTH));
+                        int btn5Y = (int)(GLWin.height * (310.0 / WINDOW_HEIGHT));
+
+                        int btn6Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn6Height = (int)(GLWin.height * (85.0 / WINDOW_HEIGHT));
+                        int btn6X = (int)(GLWin.width * (695.0 / WINDOW_WIDTH));
+                        int btn6Y = (int)(GLWin.height * (310.0 / WINDOW_HEIGHT));
+
+                        // --- Rząd 3 ---
+                        int btn7Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn7Height = (int)(GLWin.height * (90.0 / WINDOW_HEIGHT));
+                        int btn7X = (int)(GLWin.width * (120.0 / WINDOW_WIDTH));
+                        int btn7Y = (int)(GLWin.height * (410.0 / WINDOW_HEIGHT));
+
+                        int btn8Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn8Height = (int)(GLWin.height * (90.0 / WINDOW_HEIGHT));
+                        int btn8X = (int)(GLWin.width * (410.0 / WINDOW_WIDTH));
+                        int btn8Y = (int)(GLWin.height * (410.0 / WINDOW_HEIGHT));
+
+                        int btn9Width = (int)(GLWin.width * (260.0 / WINDOW_WIDTH));
+                        int btn9Height = (int)(GLWin.height * (90.0 / WINDOW_HEIGHT));
+                        int btn9X = (int)(GLWin.width * (695.0 / WINDOW_WIDTH));
+                        int btn9Y = (int)(GLWin.height * (410.0 / WINDOW_HEIGHT));
+
+                        // --- Obsługa kliknięć ---
+                        if (mouseX >= btn1X && mouseX <= btn1X + btn1Width && mouseY >= btn1Y && mouseY <= btn1Y + btn1Height) {
+                            printf("Button 1 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 1
+                        } else if (mouseX >= btn2X && mouseX <= btn2X + btn2Width && mouseY >= btn2Y && mouseY <= btn2Y + btn2Height) {
+                            printf("Button 2 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 2
+                        } else if (mouseX >= btn3X && mouseX <= btn3X + btn3Width && mouseY >= btn3Y && mouseY <= btn3Y + btn3Height) {
+                            printf("Button 3 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 3
+                        } else if (mouseX >= btn4X && mouseX <= btn4X + btn4Width && mouseY >= btn4Y && mouseY <= btn4Y + btn4Height) {
+                            printf("Button 4 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 4
+                        } else if (mouseX >= btn5X && mouseX <= btn5X + btn5Width && mouseY >= btn5Y && mouseY <= btn5Y + btn5Height) {
+                            printf("Button 5 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 5
+                        } else if (mouseX >= btn6X && mouseX <= btn6X + btn6Width && mouseY >= btn6Y && mouseY <= btn6Y + btn6Height) {
+                            printf("Button 6 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 6
+                        } else if (mouseX >= btn7X && mouseX <= btn7X + btn7Width && mouseY >= btn7Y && mouseY <= btn7Y + btn7Height) {
+                            printf("Button 7 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 7
+                        } else if (mouseX >= btn8X && mouseX <= btn8X + btn8Width && mouseY >= btn8Y && mouseY <= btn8Y + btn8Height) {
+                            printf("Button 8 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 8
+                        } else if (mouseX >= btn9X && mouseX <= btn9X + btn9Width && mouseY >= btn9Y && mouseY <= btn9Y + btn9Height) {
+                            printf("Button 9 clicked %d \n", mouseX);
+                            // TODO: Akcja dla przycisku 9
+                        }
 
                     } else if(lobby == true){
 
 
-                        int btnWidth = (int)GLWin.width*(520.0/1080.0);
-                        int btnHeight = (int)GLWin.height*(80.0/720.0);
+                        int btnWidth = (int)GLWin.width*(520.0/WINDOW_WIDTH);
+                        int btnHeight = (int)GLWin.height*(80.0/WINDOW_HEIGHT);
                         int btnX = (GLWin.width-btnWidth)/2;
-                        int btnY = (int)GLWin.height*(400.0/720.0);
+                        int btnY = (int)GLWin.height*(400.0/WINDOW_HEIGHT);
 
                         if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
                             mouseY >= btnY && mouseY <= btnY + btnHeight) {
@@ -391,10 +470,10 @@ int main(int argc, char **argv)
 
                     } else {
 
-                        int btnWidth = (int)GLWin.width*(520.0/1080.0);
-                        int btnHeight = (int)GLWin.height*(80.0/720.0);
+                        int btnWidth = (int)GLWin.width*(520.0/WINDOW_WIDTH);
+                        int btnHeight = (int)GLWin.height*(80.0/WINDOW_HEIGHT);
                         int btnX = (GLWin.width-btnWidth)/2;
-                        int btnY = (int)GLWin.height*(400.0/720.0);
+                        int btnY = (int)GLWin.height*(400.0/WINDOW_HEIGHT);
 
                         if (mouseX >= btnX && mouseX <= btnX + btnWidth &&
                             mouseY >= btnY && mouseY <= btnY + btnHeight) {

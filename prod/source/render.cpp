@@ -235,8 +235,9 @@ int drawGLScene(int counter)
     
     glm::mat4 translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, 0.0f));  		//macierz przesuniecia o zadany wektor
     glm::mat4 rotationMatrix = glm::rotate(glm::mat4(), glm::radians(fi), glm::vec3(0.0f, 1.0f, 0.0f)); //macierz obrotu o dany kat wokol wektora
+    glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		
-    glm::mat4 transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix; //wygenerowanie macierzy uwzgledniajacej wszystkie transformacje
+    glm::mat4 transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix; //wygenerowanie macierzy uwzgledniajacej wszystkie transformacje
 
 
     GLint transformMatrixUniformLocation = glGetUniformLocation(shaderProgram, "transformMatrix");  //pobranie polozenia macierzy bedacej zmienna jednorodna shadera
@@ -256,7 +257,7 @@ int drawGLScene(int counter)
       glBindVertexArray(vao[1]);
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
       translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, -0.8f, 0.0f));
-      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix;
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
       glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
       glBindVertexArray(vao[1]);
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
@@ -266,7 +267,109 @@ int drawGLScene(int counter)
       drawText("JOIN AGAIN", glm::vec3(-0.8f, -0.45f, 0.0f), 0.3f, shaderProgram, projectionMatrix, viewMatrix);
       drawText("MAIN MENU", glm::vec3(-0.8f, -1.25f, 0.0f), 0.3f, shaderProgram, projectionMatrix, viewMatrix);
     } else if (game){ // lobby scene
-  
+      //5
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, -0.1f, 0.0f));
+      scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 1.0f, 1.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix; 
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix)); 
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      //2
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.5f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      //4
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 1.1f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+
+      //8
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(-1.1f, -0.1f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix; 
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix)); 
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      //1
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(-1.1f, 0.5f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      //6
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(-1.1f, 1.1f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+
+      //9
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(1.1f, -0.1f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix; 
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix)); 
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      //3
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(1.1f, 0.5f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+      //7
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(1.1f, 1.1f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+
+      //upper
+      scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 1.9f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+
+      //lower
+      scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+      translationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f,-0.9f, 0.0f));
+      transformMatrix = projectionMatrix * viewMatrix * translationMatrix * rotationMatrix * scaleMatrix;
+      glUniformMatrix4fv(transformMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+      glBindVertexArray(vao[1]);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
+
+      //1
+      drawText("ORANGE", glm::vec3(-1.5f, 0.05f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //2
+      drawText("WHITE", glm::vec3(-0.4f, 0.05f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //3
+      drawText("BLACK", glm::vec3(0.7f, 0.05f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //4
+      drawText("GREEN", glm::vec3(-0.4f, 0.65f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //5
+      drawText("YELLOW", glm::vec3(-0.4f, -0.55f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //6
+      drawText("BLUE", glm::vec3(-1.5f, 0.65f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //7
+      drawText("PINK", glm::vec3(0.7f, 0.65f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //8
+      drawText("GRAY", glm::vec3(-1.5f, -0.55f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //9
+      drawText("RED", glm::vec3(0.7f, -0.55f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
+      //change to received text
+      std::string key_text = "RED";
+      float offset = key_text.length()*-0.12f;
+      //change to recived colour
+      glm::vec3 key_color = glm::vec3(1.0f, 0.0f, 0.0f);
+      //top
+      drawText(key_text, glm::vec3(offset+0.12f, 1.45f, 0.0f), 0.4f, shaderProgram, projectionMatrix, viewMatrix, key_color);
+      //bot
+      drawText(key_text, glm::vec3(offset+0.12f, -1.35f, 0.0f), 0.4f, shaderProgram, projectionMatrix, viewMatrix, key_color);
+
+
     } else if (lobby) { // game scene
       glBindVertexArray(vao[1]);
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //rysowanie prostokata
@@ -279,7 +382,6 @@ int drawGLScene(int counter)
       drawText(ip_text, glm::vec3(-1.3f, 0.1f, 0.0f), 0.25f, shaderProgram, projectionMatrix, viewMatrix);
       drawText("CONNECT", glm::vec3(-0.7f, -0.45f, 0.0f), 0.4f, shaderProgram, projectionMatrix, viewMatrix, glm::vec3(0.0, 0.0, 0.0));
     }
- 
     glFlush();
 
     return 1;    
